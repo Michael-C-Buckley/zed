@@ -88,6 +88,18 @@ stdenv.mkDerivation rec {
     mkdir -p $out/lib
     cp -r ./lib/* $out/lib/
 
+    patchelf --set-rpath "${lib.makeLibraryPath [
+      alsa-lib
+      fontconfig
+      freetype
+      libxkbcommon
+      libglvnd
+      wayland
+      xorg.libxcb
+      zlib
+      zstd
+    ]}" $out/libexec/zed-editor
+
     wrapProgram $out/bin/zed \
       --prefix LD_LIBRARY_PATH : "$out/lib" \
       --set FONTCONFIG_FILE /etc/fonts/fonts.conf
